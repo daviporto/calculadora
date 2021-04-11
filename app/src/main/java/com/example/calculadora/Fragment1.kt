@@ -136,12 +136,25 @@ class Fragment1 : Fragment(), View.OnClickListener {
 
         lateinit var errorMessage: String
 
-        fun findOperator(option1: Char, option2: Char, text: String): Int {
-            for (i in text.indices) {
-                if (text[i] == option1)
-                    return i
-                if (text[i] == option2)
-                    return i
+        fun findOperator(option1: Char, option2: Char, text: String, ignoreFirstMinus: Boolean = false): Int {
+            if (!ignoreFirstMinus) {
+                for (i in text.indices) {
+                    if (text[i] == option1)
+                        return i
+                    if (text[i] == option2)
+                        return i
+                }
+            } else {
+                for (i in text.indices) {
+                    if (text[i] == option1) {
+                        if (i != 0)
+                            return i
+                    }
+                    if (text[i] == option2) {
+                        if (i != 0)
+                            return i
+                    }
+                }
             }
             return -1
         }
@@ -296,10 +309,11 @@ class Fragment1 : Fragment(), View.OnClickListener {
 
             while (true) {
                 //mais e menos
-                val operatorPosition = findOperator('+', '-', text)
+                val operatorPosition = findOperator('+', '-', text, true)
                 if (operatorPosition == -1)
                     break
                 val leftNumberPosition = findLeftNumber(operatorPosition, text)
+                println(text + "  " + leftNumberPosition + "  " + operatorPosition )
                 val leftNumber = text.substring(leftNumberPosition, operatorPosition).toBigDecimal()
 
                 var rightNumberPosition = findRightNumber(operatorPosition, text)
